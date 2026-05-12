@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HerGrowth – Coaching 100% féminin</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ─── NAVBAR ─── -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="logo">Her<span>Growth</span></a>
+    <ul class="nav-links">
+      <li><a href="#domaines">Domaines</a></li>
+      <li><a href="#coachs">Coachs</a></li>
+      <li><a href="#comment">Comment ça marche</a></li>
+      <li><a href="pages/login.html">Connexion</a></li>
+    </ul>
+    <a href="pages/register.html" class="btn btn-primary">Rejoindre maintenant</a>
+    <button class="burger" id="burger" aria-label="Menu">&#9776;</button>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">✦ Plateforme 100% dédiée aux femmes</div>
+      <h1>Grandis,<br>à ton <em>rythme</em>,<br>avec les bonnes coachs.</h1>
+      <p>Sport, nutrition, coding ou développement personnel — trouve la coach qui te ressemble et réserve ta séance en quelques clics.</p>
+      <div class="hero-actions">
+        <a href="pages/register.html" class="btn btn-primary">Trouver ma coach</a>
+        <a href="pages/coachs.html" class="btn btn-outline">Voir les séances</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-num">240+</div><div class="stat-label">Coachs certifiées</div></div>
+        <div class="stat-item"><div class="stat-num">4.9★</div><div class="stat-label">Note moyenne</div></div>
+        <div class="stat-item"><div class="stat-num">12k</div><div class="stat-label">Femmes accompagnées</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="coach-card"><div class="coach-avatar avatar-sport">🧘‍♀️</div><div class="coach-info"><div class="coach-name">Inès Benmoussa</div><div class="coach-domain">Sport post-partum · En ligne</div></div><div class="coach-rating">★ 4.9</div></div>
+      <div class="coach-card"><div class="coach-avatar avatar-code">💻</div><div class="coach-info"><div class="coach-name">Sara Khalil</div><div class="coach-domain">Reconversion tech · Présentiel</div></div><div class="coach-rating">★ 5.0</div></div>
+      <div class="coach-card"><div class="coach-avatar avatar-nutri">🥗</div><div class="coach-info"><div class="coach-name">Amira Toumi</div><div class="coach-domain">Nutrition PCOS · En ligne</div></div><div class="coach-rating">★ 4.8</div></div>
+    </div>
+  </section>
+
+  <!-- ─── DOMAINES ─── -->
+  <section class="domaines section-pad" id="domaines">
+    <div class="container">
+      <div class="section-label">Nos domaines</div>
+      <h2 class="section-title">Une coach pour chaque<br>étape de ta vie</h2>
+      <p class="section-sub">Des programmes pensés pour les problématiques réelles des femmes, par des coachs spécialisées.</p>
+      <div class="domaines-grid">
+        <div class="domaine-card">
+          <div class="domaine-icon icon-sport">🧘‍♀️</div>
+          <h3>Sport & Bien-être</h3>
+          <p>Remise en forme, yoga, pilates, reprise post-partum — à ton rythme et selon tes objectifs.</p>
+          <div class="tags"><span class="tag">Fitness</span><span class="tag">Yoga</span><span class="tag">Post-partum</span></div>
+        </div>
+        <div class="domaine-card">
+          <div class="domaine-icon icon-nutri">🥗</div>
+          <h3>Nutrition</h3>
+          <p>Rééquilibrage alimentaire, PCOS, grossesse, ménopause — une approche bienveillante.</p>
+          <div class="tags"><span class="tag">PCOS</span><span class="tag">Grossesse</span><span class="tag">Rééquilibrage</span></div>
+        </div>
+        <div class="domaine-card">
+          <div class="domaine-icon icon-code">💻</div>
+          <h3>Coding & Carrière</h3>
+          <p>Reconversion tech, freelancing, leadership féminin — des coachs qui ont vécu le chemin.</p>
+          <div class="tags"><span class="tag">Reconversion</span><span class="tag">Freelance</span><span class="tag">Tech</span></div>
+        </div>
+        <div class="domaine-card">
+          <div class="domaine-icon icon-perso">🧠</div>
+          <h3>Développement personnel</h3>
+          <p>Confiance en soi, gestion du stress, retour après pause carrière — avance sereinement.</p>
+          <div class="tags"><span class="tag">Confiance</span><span class="tag">Stress</span><span class="tag">Mindset</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── COACHS ─── -->
+  <section class="section-pad bg-beige" id="coachs">
+    <div class="container">
+      <div class="section-label">Nos coachs</div>
+      <h2 class="section-title">Des expertes qui te <em>comprennent</em></h2>
+      <div class="coachs-grid" id="coachs-grid">
+        <!-- Cards injectées par JS -->
+      </div>
+      <div class="center-btn">
+        <a href="pages/coachs.html" class="btn btn-outline">Voir toutes les coachs</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── COMMENT ÇA MARCHE ─── -->
+  <section class="section-pad bg-white" id="comment">
+    <div class="container">
+      <div class="section-label text-center">Comment ça marche</div>
+      <h2 class="section-title text-center">4 étapes vers ta meilleure version</h2>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><h4>Crée ton profil</h4><p>Définis tes objectifs, préférences et budget pour un matching personnalisé.</p></div>
+        <div class="step"><div class="step-num">2</div><h4>Trouve ta coach</h4><p>Notre algorithme te propose les coachs les plus adaptées à ton profil.</p></div>
+        <div class="step"><div class="step-num">3</div><h4>Réserve en ligne</h4><p>Choisis ton créneau, ton format (solo / groupe) et paye en toute sécurité.</p></div>
+        <div class="step"><div class="step-num">4</div><h4>Progresse !</h4><p>Suis tes objectifs, accumule des badges et mesure ta progression.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BADGES ─── -->
+  <section class="section-pad bg-beige">
+    <div class="container">
+      <div class="section-label">Système de progression</div>
+      <h2 class="section-title">Tes badges, ton parcours</h2>
+      <p class="section-sub">Chaque étape franchie mérite d'être célébrée.</p>
+      <div class="badges-grid">
+        <div class="badge-card"><div class="badge-icon">💪</div><div><div class="badge-name">Motivée</div><div class="badge-desc">3 séances complétées sans jamais lâcher.</div></div></div>
+        <div class="badge-card"><div class="badge-icon">👩‍💻</div><div><div class="badge-name">Débutante en code</div><div class="badge-desc">Ta première séance coding validée.</div></div></div>
+        <div class="badge-card"><div class="badge-icon">🌱</div><div><div class="badge-name">En équilibre</div><div class="badge-desc">1 mois de suivi nutrition accompli.</div></div></div>
+        <div class="badge-card"><div class="badge-icon">✨</div><div><div class="badge-name">Confiance retrouvée</div><div class="badge-desc">5 séances développement personnel.</div></div></div>
+        <div class="badge-card"><div class="badge-icon">🏅</div><div><div class="badge-name">Achiever</div><div class="badge-desc">Objectif mensuel atteint.</div></div></div>
+        <div class="badge-card"><div class="badge-icon">🦋</div><div><div class="badge-name">Transformation</div><div class="badge-desc">6 mois et un objectif majeur accompli.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <section class="cta-section">
+    <div class="container text-center">
+      <div class="section-label">Rejoins-nous</div>
+      <h2 class="section-title" style="color:#fff">Ton évolution commence aujourd'hui</h2>
+      <p class="section-sub" style="color:rgba(255,255,255,.55);margin:0 auto 44px">Rejoins 12 000 femmes qui avancent avec HerGrowth chaque semaine.</p>
+      <div class="cta-actions">
+        <a href="pages/register.html" class="btn btn-white">Créer mon compte gratuitement</a>
+        <a href="pages/register.html?role=coach" class="btn btn-ghost">Devenir coach</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">Her<span>Growth</span></a>
+        <p>Toutes les femmes méritent la meilleure version d'elles-mêmes.</p>
+      </div>
+      <div class="footer-links">
+        <div><h5>Plateforme</h5><a href="pages/coachs.html">Trouver une coach</a><a href="pages/register.html">S'inscrire</a><a href="pages/login.html">Connexion</a></div>
+        <div><h5>Domaines</h5><a href="#">Sport & Bien-être</a><a href="#">Nutrition</a><a href="#">Coding & Carrière</a><a href="#">Dev. personnel</a></div>
+        <div><h5>Légal</h5><a href="#">Confidentialité</a><a href="#">CGU</a><a href="#">Contact</a></div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 HerGrowth — Tous droits réservés.</div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administration – HerGrowth</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="logo">Her<span>Growth</span></a>
+    <ul class="nav-links"></ul>
+    <span style="font-size:13px;color:var(--text-muted)">Espace Admin</span>
+    <a href="../pages/login.html" class="btn btn-outline btn-sm">Déconnexion</a>
+  </nav>
+
+  <div class="admin-layout">
+
+    <!-- Sidebar admin -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-avatar" style="background:rgba(232,135,157,.18)">👩‍💼</div>
+      <div class="sidebar-name">Administratrice</div>
+      <div class="sidebar-role">Super Admin</div>
+      <nav>
+        <a href="#stats" class="active"><span class="icon">📊</span> Tableau de bord</a>
+        <a href="#coachs-admin"><span class="icon">👩‍🏫</span> Gestion coachs</a>
+        <a href="#reservations-admin"><span class="icon">📅</span> Réservations</a>
+        <a href="#utilisatrices-admin"><span class="icon">👩‍💻</span> Utilisatrices</a>
+        <a href="#stats-detail"><span class="icon">📈</span> Statistiques</a>
+      </nav>
+    </aside>
+
+    <!-- Contenu admin -->
+    <main class="admin-main">
+
+      <!-- Stats globales -->
+      <section id="stats">
+        <div class="page-title">Tableau de bord</div>
+        <div class="page-sub">Vue d'ensemble de la plateforme HerGrowth.</div>
+
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="stat-icon icon-bg-rose">👩‍💻</div>
+            <div class="stat-num">1 248</div>
+            <div class="stat-label">Utilisatrices inscrites</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon icon-bg-blue">👩‍🏫</div>
+            <div class="stat-num">47</div>
+            <div class="stat-label">Coachs actives</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon icon-bg-green">📅</div>
+            <div class="stat-num">326</div>
+            <div class="stat-label">Réservations ce mois</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon icon-bg-orange">💶</div>
+            <div class="stat-num">14 820€</div>
+            <div class="stat-label">Chiffre d'affaires mensuel</div>
+          </div>
+        </div>
+
+        <!-- Catégories populaires -->
+        <div class="table-card" style="margin-bottom:24px">
+          <div class="table-header"><h3>Catégories les plus demandées</h3></div>
+          <div style="padding:24px">
+            <div style="margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px"><span>🧘‍♀️ Sport & Bien-être</span><span>42%</span></div>
+              <div style="background:var(--beige);border-radius:50px;height:8px"><div style="width:42%;height:100%;background:var(--rose-deep);border-radius:50px"></div></div>
+            </div>
+            <div style="margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px"><span>🥗 Nutrition</span><span>28%</span></div>
+              <div style="background:var(--beige);border-radius:50px;height:8px"><div style="width:28%;height:100%;background:#BBFBD4;border-radius:50px"></div></div>
+            </div>
+            <div style="margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px"><span>💻 Coding & Carrière</span><span>18%</span></div>
+              <div style="background:var(--beige);border-radius:50px;height:8px"><div style="width:18%;height:100%;background:#C8BBFB;border-radius:50px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px"><span>🧠 Développement personnel</span><span>12%</span></div>
+              <div style="background:var(--beige);border-radius:50px;height:8px"><div style="width:12%;height:100%;background:#FDD5BB;border-radius:50px"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Gestion coachs -->
+      <section id="coachs-admin" style="margin-top:40px">
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Gestion des coachs</h3>
+            <button class="btn btn-primary btn-sm" onclick="showAddCoach()">+ Ajouter une coach</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Domaine</th>
+                  <th>Spécialité</th>
+                  <th>Note</th>
+                  <th>Tarif</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-coachs-grid">
+                <!-- Rempli par JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Réservations admin -->
+      <section id="reservations-admin" style="margin-top:40px">
+        <div class="table-card">
+          <div class="table-header"><h3>Toutes les réservations</h3></div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr><th>#</th><th>Utilisatrice</th><th>Coach</th><th>Domaine</th><th>Date</th><th>Statut</th><th>Prix</th><th>Actions</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>#001</td><td>Fatima El Amrani</td><td>Inès Benmoussa</td><td>Sport</td><td>12/08/2025 · 10h</td><td><span class="badge-status status-confirme">Confirmé</span></td><td>45€</td><td><button class="btn btn-sm btn-danger">Annuler</button></td></tr>
+                <tr><td>#002</td><td>Nadia Ouali</td><td>Sara Khalil</td><td>Coding</td><td>15/08/2025 · 14h</td><td><span class="badge-status status-attente">En attente</span></td><td>60€</td><td><button class="btn btn-sm btn-danger">Annuler</button></td></tr>
+                <tr><td>#003</td><td>Leila Ben Youssef</td><td>Amira Toumi</td><td>Nutrition</td><td>28/07/2025 · 11h</td><td><span class="badge-status status-confirme">Confirmé</span></td><td>30€</td><td><button class="btn btn-sm btn-danger">Annuler</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Utilisatrices -->
+      <section id="utilisatrices-admin" style="margin-top:40px">
+        <div class="table-card">
+          <div class="table-header"><h3>Gestion des utilisatrices</h3></div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr><th>Nom</th><th>Email</th><th>Inscrite le</th><th>Séances</th><th>Statut</th><th>Actions</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Fatima El Amrani</strong></td><td>fatima@example.com</td><td>12 Juin 2025</td><td>8</td><td><span class="badge-status status-confirme">Active</span></td><td><button class="btn btn-sm btn-danger">Bloquer</button></td></tr>
+                <tr><td><strong>Nadia Ouali</strong></td><td>nadia@example.com</td><td>3 Juillet 2025</td><td>3</td><td><span class="badge-status status-confirme">Active</span></td><td><button class="btn btn-sm btn-danger">Bloquer</button></td></tr>
+                <tr><td><strong>Leila Ben Youssef</strong></td><td>leila@example.com</td><td>28 Juillet 2025</td><td>1</td><td><span class="badge-status status-attente">Nouvelle</span></td><td><button class="btn btn-sm btn-danger">Bloquer</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modal ajout coach -->
+  <div class="modal-overlay" id="add-coach-modal">
+    <div class="modal" style="position:relative">
+      <button class="modal-close" onclick="document.getElementById('add-coach-modal').classList.remove('open')">✕</button>
+      <h3>Ajouter une coach</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Prénom</label><input type="text" placeholder="Prénom" /></div>
+        <div class="form-group"><label>Nom</label><input type="text" placeholder="Nom" /></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="email@example.com" /></div>
+      <div class="form-group">
+        <label>Domaine</label>
+        <select><option>Sport & Bien-être</option><option>Nutrition</option><option>Coding & Carrière</option><option>Développement personnel</option></select>
+      </div>
+      <div class="form-group"><label>Spécialité</label><input type="text" placeholder="ex : Post-partum, PCOS..." /></div>
+      <div class="form-group"><label>Bio</label><textarea placeholder="Présentation de la coach..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Tarif (€/h)</label><input type="number" placeholder="50" /></div>
+        <div class="form-group">
+          <label>Format</label>
+          <select><option>En ligne</option><option>Présentiel</option><option>Les deux</option></select>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;padding:14px" onclick="document.getElementById('add-coach-modal').classList.remove('open');showToast('Coach ajoutée ✓')">
+        Ajouter la coach
+      </button>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script>
+    function showAddCoach() {
+      document.getElementById("add-coach-modal").classList.add("open");
+    }
+    document.getElementById("add-coach-modal").addEventListener("click", e => {
+      if (e.target === document.getElementById("add-coach-modal")) e.target.classList.remove("open");
+    });
+  </script>
+</body>
+</html>
