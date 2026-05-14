@@ -1,0 +1,188 @@
+<?php
+session_start();
+if (empty($_SESSION['user_id'])) {
+    header('Location: ../php/login.php');
+    exit;
+}
+$loggedIn = true;
+$role = $_SESSION['role'] ?? 'user';
+$prenom = $_SESSION['prenom'] ?? 'Utilisateur';
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mon espace – HerGrowth</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.php" class="logo">Her<span>Growth</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.php">Accueil</a></li>
+      <li><a href="coachs.php">Coachs</a></li>
+      <li><a href="dashboard.php" class="active">Mon espace</a></li>
+    </ul>
+    <a href="../php/logout.php" class="btn btn-outline btn-sm">Déconnexion</a>
+  </nav>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-avatar"><?php echo $role === 'coach' ? '👩‍💻' : '👑'; ?></div>
+      <div class="sidebar-name"><?php echo htmlspecialchars($prenom); ?></div>
+      <div class="sidebar-role"><?php echo $role === 'coach' ? 'Coach' : 'Utilisatrice'; ?> · Membre</div>
+      <nav class="sidebar-nav">
+        <a href="#tableau" class="active"><span class="icon">📊</span> Tableau de bord</a>
+        <?php if ($role === 'coach'): ?>
+            <a href="#reservations"><span class="icon">📅</span> Mes séances clientes</a>
+        <?php else: ?>
+            <a href="#reservations"><span class="icon">📅</span> Mes réservations</a>
+            <a href="#progression"><span class="icon">🏆</span> Ma progression</a>
+            <a href="coachs.php"><span class="icon">🔎</span> Trouver une coach</a>
+        <?php endif; ?>
+        <a href="#profil"><span class="icon">👤</span> Mon profil</a>
+      </nav>
+    </aside>
+
+    <!-- Contenu principal -->
+    <main class="main-content">
+
+      <!-- Tableau de bord -->
+      <section id="tableau">
+        <div class="page-title">Bonjour <?php echo htmlspecialchars($prenom); ?> 👋</div>
+        <div class="page-sub">Voici un résumé de ton parcours sur HerGrowth.</div>
+
+        <?php if ($role === 'coach'): ?>
+        
+        <!-- TABLEAU DE BORD COACH -->
+        <div class="metrics" style="margin-bottom:32px">
+          <div class="metric-card">
+            <div class="metric-label">Séances prévues</div>
+            <div class="metric-value">--</div>
+            <div class="metric-delta">À venir</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Note moyenne</div>
+            <div class="metric-value">4.8 ⭐</div>
+            <div class="metric-delta">Génial !</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Revenus générés</div>
+            <div class="metric-value">-- DT</div>
+            <div class="metric-delta">Ce mois</div>
+          </div>
+        </div>
+
+        <div class="table-card" style="margin-top:40px">
+          <div class="table-header">
+            <h3>Mes clientes</h3>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Email</th>
+                  <th>Date et Heure</th>
+                  <th>Type</th>
+                  <th>Statut</th>
+                  <th>Prix</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="coach-resa-tbody">
+                <!-- JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <?php else: ?>
+        
+        <!-- TABLEAU DE BORD UTILISATRICE -->
+        <div class="metrics">
+          <div class="metric-card">
+            <div class="metric-label">Séances réalisées</div>
+            <div class="metric-value">--</div>
+            <div class="metric-delta up">--</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Prochaine séance</div>
+            <div class="metric-value" style="font-size:20px">--</div>
+            <div class="metric-delta" style="color:var(--text-muted)">--</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Badges obtenus</div>
+            <div class="metric-value">--</div>
+            <div class="metric-delta up">--</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Budget dépensé</div>
+            <div class="metric-value">-- DT</div>
+            <div class="metric-delta" style="color:var(--text-muted)">Ce trimestre</div>
+          </div>
+        </div>
+
+        <!-- Réservations -->
+        <section id="reservations" style="margin-top:40px">
+          <div class="table-card">
+            <div class="table-header">
+              <h3>Mes réservations</h3>
+              <a href="coachs.php" class="btn btn-primary btn-sm">+ Nouvelle réservation</a>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Coach</th>
+                    <th>Domaine</th>
+                    <th>Date & heure</th>
+                    <th>Type</th>
+                    <th>Statut</th>
+                    <th>Prix</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="resa-tbody">
+                  <!-- Rempli par JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Progression / Badges -->
+        <section id="progression" style="margin-top:40px">
+          <div class="page-title" style="font-size:22px;margin-bottom:8px">Mes badges</div>
+          <p class="page-sub">Continue comme ça, 4 badges encore à débloquer !</p>
+
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px" id="badge-list">
+            <!-- Rempli par JS -->
+          </div>
+
+          <div style="margin-top:32px;background:var(--white);border-radius:18px;border:1px solid var(--border);padding:28px">
+            <div style="font-size:15px;font-weight:500;margin-bottom:16px">Objectif en cours</div>
+            <div style="color:var(--text-muted);font-size:14px;margin-bottom:12px">Compléter 10 séances de sport post-partum</div>
+            <div style="background:var(--beige);border-radius:50px;height:10px;overflow:hidden">
+              <div style="width:80%;height:100%;background:var(--rose-deep);border-radius:50px;transition:width .6s"></div>
+            </div>
+            <div style="font-size:13px;color:var(--text-muted);margin-top:8px">8 / 10 séances</div>
+          </div>
+        </section>
+
+        <?php endif; ?>
+
+      </section>
+
+    </main>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

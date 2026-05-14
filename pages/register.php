@@ -3,119 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inscription – HerGrowth</title>
+  <title>Inscription — HerGrowth</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
 
   <nav class="navbar">
-    <a href="../index.html" class="logo">Her<span>Growth</span></a>
-    <ul class="nav-links"><li><a href="../index.html">Accueil</a></li></ul>
-    <a href="login.html" class="btn btn-outline">Connexion</a>
+    <div class="container nav-inner">
+      <a href="../index.php" class="logo">Her<span>Growth</span></a>
+      <ul class="nav-links"><li><a href="../index.php">Accueil</a></li></ul>
+      <a href="login.php" class="btn btn-outline btn-sm">Connexion</a>
+    </div>
   </nav>
 
   <div class="auth-page">
-    <div class="auth-card" style="max-width:560px">
-      <div class="section-label">Bienvenue</div>
-      <h2>Créer mon compte</h2>
-      <p class="sub">Rejoins 12 000 femmes qui avancent avec HerGrowth ✨</p>
+    <div class="auth-card" style="max-width:600px">
+      <h2>Crée ton compte</h2>
+      <p class="sub">Rejoins la communauté HerGrowth et commence ton évolution.</p>
 
-      <div class="role-tabs" id="role-tabs">
-        <div class="role-tab active" data-role="user">👤 Utilisatrice</div>
-        <div class="role-tab" data-role="coach">🎓 Je suis coach</div>
-      </div>
+      <form action="../php/register.php" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Prénom</label>
+            <input type="text" name="prenom" placeholder="Sarra" required>
+          </div>
+          <div class="form-group">
+            <label>Nom</label>
+            <input type="text" name="nom" placeholder="Ben Slimen" required>
+          </div>
+        </div>
 
-      <form id="register-form" action="../php/register.php" method="POST">
-        <input type="hidden" name="role" id="role-input" value="user" />
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="sarra@exemple.com" required>
+        </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="prenom">Prénom</label>
-            <input type="text" id="prenom" name="prenom" placeholder="Ton prénom" required />
+            <label>Mot de passe</label>
+            <input type="password" name="password" placeholder="••••••••" required>
           </div>
           <div class="form-group">
-            <label for="nom">Nom</label>
-            <input type="text" id="nom" name="nom" placeholder="Ton nom" required />
+            <label>Confirme le mot de passe</label>
+            <input type="password" name="password2" placeholder="••••••••" required>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="email">Adresse e-mail</label>
-          <input type="email" id="email" name="email" placeholder="toi@example.com" required />
-        </div>
-
-        <div class="form-group">
-          <label for="password">Mot de passe</label>
-          <input type="password" id="password" name="password" placeholder="Minimum 8 caractères" required minlength="8" />
-        </div>
-
-        <div class="form-group">
-          <label for="password2">Confirmer le mot de passe</label>
-          <input type="password" id="password2" name="password2" placeholder="••••••••" required />
-        </div>
-
-        <!-- Champs coach uniquement -->
-        <div id="coach-fields" style="display:none">
-          <div class="form-group">
-            <label for="specialite">Domaine de coaching</label>
-            <select id="specialite" name="specialite">
-              <option value="">Sélectionner un domaine</option>
-              <option>Sport & Bien-être</option>
-              <option>Nutrition</option>
-              <option>Coding & Carrière</option>
-              <option>Développement personnel</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="bio">Présentation courte</label>
-            <textarea id="bio" name="bio" placeholder="Décris ton parcours et ta spécialité..."></textarea>
-          </div>
-          <div class="form-group">
-            <label for="prix">Tarif horaire (€)</label>
-            <input type="number" id="prix" name="prix" placeholder="ex : 50" min="10" max="300" />
+          <label>Je souhaite m'inscrire en tant que :</label>
+          <div style="display:flex;gap:20px;margin-top:10px">
+            <label style="display:flex;align-items:center;gap:8px;font-weight:400;text-transform:none;letter-spacing:0">
+              <input type="radio" name="role" value="user" checked> Utilisatrice
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;font-weight:400;text-transform:none;letter-spacing:0">
+              <input type="radio" name="role" value="coach"> Coach
+            </label>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="objectif">Ton objectif principal</label>
-          <select id="objectif" name="objectif">
-            <option value="">Sélectionner un objectif</option>
-            <option>Perdre du poids / remise en forme</option>
-            <option>Apprendre à coder / reconversion</option>
-            <option>Mieux manger / rééquilibrage</option>
-            <option>Gagner en confiance</option>
-            <option>Gérer mon stress</option>
-            <option>Reprendre après un congé maternité</option>
-          </select>
+          <label>Quels sont tes objectifs ? (optionnel)</label>
+          <textarea name="objectif" style="width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--border);min-height:80px;font-family:inherit" placeholder="Ex: Perte de poids, reconversion tech..."></textarea>
         </div>
 
-        <div class="form-check" style="margin-bottom:24px">
-          <input type="checkbox" id="cgu" name="cgu" required />
-          <label for="cgu">J'accepte les <a href="#" style="color:var(--rose-deep)">conditions d'utilisation</a></label>
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width:100%;padding:15px">Créer mon compte</button>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:12px">Créer mon compte</button>
       </form>
 
-      <div class="form-link">
-        Déjà un compte ? <a href="login.html">Se connecter</a>
-      </div>
+      <p class="form-link">Déjà membre ? <a href="login.php">Se connecter</a></p>
     </div>
   </div>
 
-  <script src="../js/app.js"></script>
-  <script>
-    // Toggle coach fields
-    document.querySelectorAll(".role-tab").forEach(tab => {
-      tab.addEventListener("click", () => {
-        document.querySelectorAll(".role-tab").forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-        const role = tab.dataset.role;
-        document.getElementById("role-input").value = role;
-        document.getElementById("coach-fields").style.display = role === "coach" ? "block" : "none";
-      });
-    });
-  </script>
+  <footer class="footer">
+    <div class="footer-bottom">© 2025 HerGrowth · Tous droits réservés.</div>
+  </footer>
+
 </body>
 </html>
