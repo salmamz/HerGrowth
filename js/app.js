@@ -54,15 +54,38 @@ function formatDate(d) {
 })();
 
 /* ==============================
+   Utilitaires Coachs
+============================== */
+function getCoachBg(domaine) {
+  const bgs = {
+    'Sport': 'avatar-sport',
+    'Nutrition': 'avatar-nutri',
+    'Coding': 'avatar-code',
+    'Perso': 'avatar-perso',
+    'Metier': 'avatar-code',
+    'Parentalite': 'avatar-sport'
+  };
+  return bgs[domaine] || 'avatar-perso';
+}
+
+function getCoachEmoji(name) {
+  // Un petit hack pour avoir des emojis variés
+  const emojis = ["🧘‍♀️", "👩‍💻", "🥗", "🧠", "💪", "🧗‍♀️", "🏃‍♀️", "🎓"];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return emojis[Math.abs(hash) % emojis.length];
+}
+
+/* ==============================
    Index — Coach Cards
 ============================== */
 function renderCoachCards(container, coaches) {
   if (!container) return;
   container.innerHTML = coaches.slice(0, 3).map(c => `
     <div class="coach-profile-card">
-      <div class="coach-img ${c.bg}">
-        ${c.emoji}
-        ${c.verified ? '<div class="verified-badge">✓ Vérifiée</div>' : ''}
+      <div class="coach-img ${getCoachBg(c.domaine)}">
+        ${getCoachEmoji(c.nom)}
+        <div class="verified-badge">✓ Vérifiée</div>
       </div>
       <div class="coach-body">
         <div class="coach-meta">
@@ -74,7 +97,7 @@ function renderCoachCards(container, coaches) {
         </div>
         <div class="coach-bio">${c.bio}</div>
         <div class="coach-footer">
-          <div class="stars">${stars(c.note)} <span>(${c.avis})</span></div>
+          <div class="stars">${stars(parseFloat(c.avg_rating || 4.5))} <span>(${c.count_avis || 0})</span></div>
           <button class="btn btn-sm btn-rose" onclick="openBooking(${c.id})">Réserver</button>
         </div>
       </div>
@@ -127,7 +150,7 @@ function initCoachsPage() {
     if (prix === "low")  list = list.filter(c => c.prix <= 45);
     if (prix === "mid")  list = list.filter(c => c.prix > 45 && c.prix <= 60);
     if (prix === "high") list = list.filter(c => c.prix > 60);
-    if (note) list = list.filter(c => c.note >= note);
+    if (note) list = list.filter(c => parseFloat(c.avg_rating) >= note);
     if (mode === "online")    list = list.filter(c => c.en_ligne);
     if (mode === "presential") list = list.filter(c => !c.en_ligne);
     render(list);
