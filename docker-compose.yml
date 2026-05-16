@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: hergrowth_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: hergrowth
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: hergrowth_user
+      MYSQL_PASSWORD: hergrowth_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "hergrowth_user", "-p${MYSQL_PASSWORD}"]
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: hergrowth_app
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      DB_HOST: db
+      DB_NAME: hergrowth
+      DB_USER: hergrowth_user
+      DB_PASS: hergrowth_password
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:

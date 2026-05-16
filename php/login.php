@@ -1,11 +1,7 @@
 <?php
 session_start();
 
-$host   = 'localhost';
-$dbname = 'hergrowth';
-$user   = 'root';
-$pass   = '';
-
+require_once 'db.php';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -16,9 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Veuillez remplir tous les champs.';
     } else {
         try {
-            $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
             $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? LIMIT 1');
             $stmt->execute([$email]);
             $u = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -30,7 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['prenom']  = $u['prenom'];
                 $_SESSION['role']    = $u['role'];
                 
-                header('Location: ../pages/dashboard.php');
+                if ($u['role'] === 'admin') {
+                    header('Location: ../admin/dashboard.php');
+                } else {
+                    header('Location: ../pages/dashboard.php');
+                }
                 exit;
             }
         } catch (PDOException $e) {

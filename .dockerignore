@@ -1,0 +1,17 @@
+.git
+.gitignore
+mysql/data
+docker-compose.yml
+Dockerfile
+.dockerignore
+README.md
+README_DEPLOY.md
+implementation_plan.md
+task.md
+walkthrough.md
+*.log
+.env
+XAMPP/
+xampp/
+htdocs/
+phpmyadmin/

@@ -60,18 +60,21 @@ function renderCoachCards(container, coaches) {
   if (!container) return;
   container.innerHTML = coaches.slice(0, 3).map(c => `
     <div class="coach-profile-card">
-      <div class="coach-img ${c.bg}">${c.emoji}</div>
+      <div class="coach-img ${c.bg}">
+        ${c.emoji}
+        ${c.verified ? '<div class="verified-badge">✓ Vérifiée</div>' : ''}
+      </div>
       <div class="coach-body">
         <div class="coach-meta">
           <div>
-            <div class="coach-name" style="font-size:17px;font-weight:500;margin-bottom:3px">${c.nom}</div>
+            <div class="coach-name">${c.nom}</div>
             <div class="coach-role">${c.specialite}</div>
           </div>
           <div class="coach-price">${c.prix}DT/h</div>
         </div>
         <div class="coach-bio">${c.bio}</div>
         <div class="coach-footer">
-          <div class="stars">${stars(c.note)} <span style="color:var(--text-muted);font-size:12px">(${c.avis} avis)</span></div>
+          <div class="stars">${stars(c.note)} <span>(${c.avis})</span></div>
           <button class="btn btn-sm btn-rose" onclick="openBooking(${c.id})">Réserver</button>
         </div>
       </div>
@@ -85,25 +88,32 @@ function initCoachsPage() {
   const grid = document.getElementById("all-coachs-grid");
   if (!grid) return;
 
-  function render(list) {
-    grid.innerHTML = list.map(c => `
-      <div class="coach-profile-card">
-        <div class="coach-img ${c.bg}">${c.emoji}</div>
-        <div class="coach-body">
-          <div class="coach-meta">
-            <div>
-              <div class="coach-name" style="font-size:17px;font-weight:500;margin-bottom:3px">${c.nom}</div>
-              <div class="coach-role">${c.specialite}</div>
-            </div>
-            <div class="coach-price">${c.prix}DT/h</div>
+  function render(data) {
+    grid.innerHTML = data.map(c => `
+        <div class="coach-profile-card">
+          <div class="coach-img ${getCoachBg(c.domaine)}">
+            ${getCoachEmoji(c.nom)}
+            <div class="verified-badge">✓ Vérifiée</div>
           </div>
-          <div class="coach-bio">${c.bio}</div>
-          <div class="coach-footer">
-            <div class="stars">${stars(c.note)} <span style="color:var(--text-muted);font-size:12px">(${c.avis} avis)</span></div>
-            <button class="btn btn-sm btn-rose" onclick="openBooking(${c.id})">Réserver</button>
+          <div class="coach-body">
+            <div class="coach-meta">
+              <h3 class="coach-name">${c.nom}</h3>
+              <span class="coach-role">${c.specialite}</span>
+              <div class="stars" style="margin-top:4px">
+                ${stars(c.avg_rating)} <span>(${c.count_avis || 0})</span>
+              </div>
+            </div>
+            <p class="coach-bio">${c.bio}</p>
+            <div class="coach-footer">
+              <div class="coach-price">${c.prix}DT<span>/séance</span></div>
+              <div style="display:flex; gap:8px">
+                <button class="btn btn-ghost btn-sm" onclick="openChat(${c.user_id}, '${c.nom}')" title="Discuter"><span class="icon">💬</span></button>
+                <button class="btn btn-primary btn-sm" onclick="openBooking(${c.id}, '${c.nom}', ${c.prix})">Réserver</button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>`).join("");
+      `).join("");
   }
 
   function filter() {
@@ -214,22 +224,43 @@ function confirmBooking() {
 }
 
 /* ==============================
+   Dashboard Navigation
+============================== */
+function showSection(id) {
+  // Hide all sections
+  document.querySelectorAll('.dashboard-section').forEach(s => s.style.display = 'none');
+  // Show target section
+  const target = document.getElementById('section-' + id);
+  if (target) target.style.display = 'block';
+
+  // Update active nav link
+  document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+  const navLink = document.getElementById('nav-' + id);
+  if (navLink) navLink.classList.add('active');
+}
+
+/* ==============================
    Dashboard utilisatrice
 ============================== */
 function initDashboard() {
   const tbody = document.getElementById("resa-tbody");
-  if (!tbody) return;
+  const tbodyShort = document.getElementById("resa-tbody-short");
+  if (!tbody && !tbodyShort) return;
 
-  tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted)">Chargement...</td></tr>`;
+  if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted)">Chargement...</td></tr>`;
+  if (tbodyShort) tbodyShort.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-muted)">Chargement...</td></tr>`;
 
   fetch("../php/reservations.php?action=list")
     .then(r => r.json())
     .then(data => {
       if (!Array.isArray(data) || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted)">Aucune réservation. <a href="coachs.php" style="color:var(--rose-deep)">Trouver une coach →</a></td></tr>`;
+        const empty = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted)">Aucune réservation. <a href="coachs.php" style="color:var(--rose-deep)">Trouver une coach →</a></td></tr>`;
+        if (tbody) tbody.innerHTML = empty;
+        if (tbodyShort) tbodyShort.innerHTML = empty;
         return;
       }
-      tbody.innerHTML = data.map(r => `
+      
+      const rows = data.map(r => `
         <tr>
           <td><strong>${r.coach_nom}</strong></td>
           <td>${r.specialite || '-'}</td>
@@ -239,30 +270,47 @@ function initDashboard() {
           <td>${r.prix}DT</td>
           <td><button class="btn btn-sm btn-danger" onclick="cancelResa(${r.id})">Annuler</button></td>
         </tr>`).join("");
+      
+      const rowsShort = data.slice(0, 3).map(r => `
+        <tr>
+          <td><strong>${r.coach_nom}</strong></td>
+          <td>${formatDate(r.date)}</td>
+          <td><span class="badge-status status-${r.statut}">${statusLabel(r.statut)}</span></td>
+          <td><button class="btn btn-sm btn-ghost" onclick="showSection('reservations')">Détails</button></td>
+        </tr>`).join("");
+
+      if (tbody) tbody.innerHTML = rows;
+      if (tbodyShort) tbodyShort.innerHTML = rowsShort;
     })
     .catch(() => {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted)">Impossible de charger les réservations.</td></tr>`;
+      const err = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted)">Impossible de charger les données.</td></tr>`;
+      if (tbody) tbody.innerHTML = err;
+      if (tbodyShort) tbodyShort.innerHTML = err;
     });
 }
-initDashboard();
 
 /* ==============================
    Dashboard Coach
 ============================== */
 function initCoachDashboard() {
   const tbody = document.getElementById("coach-resa-tbody");
-  if (!tbody) return;
+  const tbodyShort = document.getElementById("coach-resa-tbody-short");
+  if (!tbody && !tbodyShort) return;
 
-  tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted)">Chargement...</td></tr>`;
+  if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted)">Chargement...</td></tr>`;
+  if (tbodyShort) tbodyShort.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-muted)">Chargement...</td></tr>`;
 
   fetch("../php/reservations.php?action=coach-list")
     .then(r => r.json())
     .then(data => {
       if (!Array.isArray(data) || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted)">Aucune séance prévue.</td></tr>`;
+        const empty = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted)">Aucune séance prévue.</td></tr>`;
+        if (tbody) tbody.innerHTML = empty;
+        if (tbodyShort) tbodyShort.innerHTML = empty;
         return;
       }
-      tbody.innerHTML = data.map(r => `
+
+      const rows = data.map(r => `
         <tr>
           <td><strong>${r.prenom} ${r.nom}</strong></td>
           <td>${r.email}</td>
@@ -275,12 +323,24 @@ function initCoachDashboard() {
             ${r.statut !== 'annule' ? `<button class="btn btn-sm btn-danger" onclick="cancelResaCoach(${r.id})">Annuler</button>` : ''}
           </td>
         </tr>`).join("");
+
+      const rowsShort = data.slice(0, 3).map(r => `
+        <tr>
+          <td><strong>${r.prenom} ${r.nom}</strong></td>
+          <td>${formatDate(r.date)}</td>
+          <td><span class="badge-status status-${r.statut}">${statusLabel(r.statut)}</span></td>
+          <td><button class="btn btn-sm btn-ghost" onclick="showSection('reservations')">Voir</button></td>
+        </tr>`).join("");
+
+      if (tbody) tbody.innerHTML = rows;
+      if (tbodyShort) tbodyShort.innerHTML = rowsShort;
     })
     .catch(() => {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted)">Impossible de charger les séances.</td></tr>`;
+      const err = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted)">Impossible de charger les données.</td></tr>`;
+      if (tbody) tbody.innerHTML = err;
+      if (tbodyShort) tbodyShort.innerHTML = err;
     });
 }
-initCoachDashboard();
 
 function cancelResa(id) {
   if (!confirm("Annuler cette réservation ?")) return;
@@ -325,30 +385,170 @@ function cancelResaCoach(id) {
 }
 
 /* ==============================
-   Admin stats
+   Admin Dashboard
 ============================== */
-function initAdmin() {
-  const adminGrid = document.getElementById("admin-coachs-grid");
-  if (!adminGrid) return;
-  adminGrid.innerHTML = COACHES.map(c => `
-    <tr>
-      <td><strong>${c.nom}</strong></td>
-      <td>${c.domaine}</td>
-      <td>${c.specialite.split("·")[0].trim()}</td>
-      <td><span class="stars">${stars(c.note)}</span> ${c.note}</td>
-      <td>${c.prix}DT/h</td>
-      <td><span class="badge-status status-confirme">Validée</span></td>
-      <td>
-        <button class="btn btn-sm btn-outline">Modifier</button>
-        <button class="btn btn-sm btn-danger" style="margin-left:6px">Supprimer</button>
-      </td>
-    </tr>`).join("");
+function showAdminSection(id) {
+  document.querySelectorAll('.dashboard-section').forEach(s => s.style.display = 'none');
+  const target = document.getElementById('admin-section-' + id);
+  if (target) target.style.display = 'block';
+  document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+  const navLink = document.getElementById('nav-' + id);
+  if (navLink) navLink.classList.add('active');
 }
-initAdmin();
+
+function initAdminDashboard() {
+  const adminApi = "../php/admin_api.php";
+  
+  // Stats
+  fetch(adminApi + "?action=stats")
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById("stat-users").textContent = d.users;
+      document.getElementById("stat-coachs").textContent = d.coachs;
+      document.getElementById("stat-resas").textContent = d.reservations;
+      document.getElementById("stat-revenue").textContent = d.revenue + "DT";
+    });
+
+  // Load Coachs
+  fetch(adminApi + "?action=list-coachs")
+    .then(r => r.json())
+    .then(data => {
+      const tbody = document.getElementById("admin-coachs-tbody");
+      if (!tbody) return;
+      tbody.innerHTML = data.map(c => `
+        <tr>
+          <td><strong>${c.nom}</strong><br><small>${c.specialite}</small></td>
+          <td>${c.domaine}</td>
+          <td>${c.prix}DT/h</td>
+          <td><span class="badge-status status-${c.valide == 1 ? 'confirme' : 'attente'}">${c.valide == 1 ? 'Validé' : 'En attente'}</span></td>
+          <td>
+            <button class="btn btn-sm btn-primary" onclick="toggleCoachValidation(${c.id}, ${c.valide == 1 ? 0 : 1})">${c.valide == 1 ? 'Suspendre' : 'Valider'}</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteCoachAdmin(${c.id})">Supprimer</button>
+          </td>
+        </tr>`).join("");
+    });
+
+  // Load Reservations
+  fetch(adminApi + "?action=list-reservations")
+    .then(r => r.json())
+    .then(data => {
+      const tbody = document.getElementById("admin-resas-tbody");
+      if (!tbody) return;
+      tbody.innerHTML = data.map(r => `
+        <tr>
+          <td><strong>${r.prenom} ${r.nom}</strong></td>
+          <td>${r.coach_nom}</td>
+          <td>${formatDate(r.date)}</td>
+          <td><span class="badge-status status-${r.statut}">${statusLabel(r.statut)}</span></td>
+          <td>${r.prix}DT</td>
+          <td><button class="btn btn-sm btn-danger">Annuler</button></td>
+        </tr>`).join("");
+    });
+
+  // Load Users
+  fetch(adminApi + "?action=list-users")
+    .then(r => r.json())
+    .then(data => {
+      const tbody = document.getElementById("admin-users-tbody");
+      if (!tbody) return;
+      tbody.innerHTML = data.map(u => `
+        <tr>
+          <td><strong>${u.prenom} ${u.nom}</strong></td>
+          <td>${u.email}</td>
+          <td>${formatDate(u.created_at)}</td>
+          <td>${u.role}</td>
+          <td><button class="btn btn-sm btn-danger">Bloquer</button></td>
+        </tr>`).join("");
+    });
+}
+
+function toggleCoachValidation(id, val) {
+  const body = new FormData();
+  body.append("id", id);
+  body.append("valide", val);
+  fetch("../php/admin_api.php?action=validate-coach", { method: "POST", body })
+    .then(() => { showToast("Statut mis à jour."); initAdminDashboard(); });
+}
+
+function deleteCoachAdmin(id) {
+  if (!confirm("Supprimer définitivement ce coach ?")) return;
+  const body = new FormData();
+  body.append("id", id);
+  fetch("../php/admin_api.php?action=delete-coach", { method: "POST", body })
+    .then(() => { showToast("Coach supprimé."); initAdminDashboard(); });
+}
 
 /* ==============================
-   Auth forms
+   Chat & Messaging
 ============================== */
+function openChat(contactId, name) {
+  showSection('messages');
+  loadChat(contactId, name);
+}
+
+function loadChat(contactId, name) {
+  const container = document.getElementById('chat-container');
+  if (!container) return;
+  
+  container.innerHTML = `<div class="chat-header"><h4>Discussion avec ${name}</h4></div><div id="chat-messages" class="chat-messages">Chargement...</div>
+    <div class="chat-input-area">
+      <input type="text" id="chat-input" placeholder="Écrivez votre message...">
+      <button class="btn btn-primary btn-sm" onclick="sendMessage(${contactId}, '${name}')">Envoyer</button>
+    </div>`;
+
+  fetch(`../php/messages_api.php?action=get_chat&contact_id=${contactId}`)
+    .then(r => r.json())
+    .then(data => {
+      const msgBox = document.getElementById('chat-messages');
+      msgBox.innerHTML = data.map(m => `
+        <div class="message ${m.expediteur_id == currentUserId ? 'sent' : 'received'}">
+          <div class="msg-content">${m.contenu}</div>
+          <div class="msg-time">${formatDate(m.created_at)}</div>
+        </div>
+      `).join("");
+      msgBox.scrollTop = msgBox.scrollHeight;
+    });
+}
+
+function sendMessage(destId, name) {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const body = new FormData();
+  body.append('destinataire_id', destId);
+  body.append('contenu', text);
+
+  fetch('../php/messages_api.php?action=send', { method: 'POST', body })
+    .then(() => {
+      input.value = '';
+      loadChat(destId, name);
+    });
+}
+
+/* ==============================
+   Reviews / Avis
+============================== */
+function openReviewModal(resaId, coachId) {
+  const note = prompt("Quelle note donnez-vous à cette séance ? (1 à 5)");
+  if (!note || note < 1 || note > 5) return;
+  const comment = prompt("Un petit commentaire ?");
+  
+  const body = new FormData();
+  body.append('reservation_id', resaId);
+  body.append('coach_id', coachId);
+  body.append('note', note);
+  body.append('commentaire', comment);
+
+  fetch('../php/admin_api.php?action=submit-review', { method: 'POST', body })
+    .then(r => r.json())
+    .then(d => {
+      if (d.success) {
+        showToast("Merci pour votre avis !");
+        initDashboard();
+      }
+    });
+}
 (function initAuth() {
   // Role tabs
   document.querySelectorAll(".role-tab").forEach(tab => {
