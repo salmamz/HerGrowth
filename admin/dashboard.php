@@ -11,7 +11,7 @@ if (empty($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Administration – HerGrowth</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/style.css?v=1.1" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
@@ -136,7 +136,7 @@ if (empty($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     </main>
   </div>
 
-  <script src="../js/app.js"></script>
+  <script src="../js/app.js?v=1.1"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       if (typeof initAdminDashboard === 'function') initAdminDashboard();

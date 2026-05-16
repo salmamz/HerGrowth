@@ -15,7 +15,7 @@ $isCoach = ($role === 'coach');
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mon espace &mdash; HerGrowth</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/style.css?v=1.1" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
@@ -236,7 +236,7 @@ $isCoach = ($role === 'coach');
     </main>
   </div>
 
-  <script src="../js/app.js"></script>
+  <script src="../js/app.js?v=1.1"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       if (typeof initDashboard === 'function' && !<?php echo $isCoach ? 'true' : 'false'; ?>) initDashboard();

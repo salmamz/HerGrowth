@@ -8,7 +8,7 @@ $loggedIn = !empty($_SESSION['user_id']);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HerGrowth &mdash; Coaching 100% au f&eacute;minin</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=1.1" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
@@ -173,6 +173,6 @@ $loggedIn = !empty($_SESSION['user_id']);
     <div class="footer-bottom">&copy; 2025 HerGrowth &middot; Tous droits r&eacute;serv&eacute;s.</div>
   </footer>
 
-  <script src="js/app.js"></script>
+  <script src="js/app.js?v=1.1"></script>
 </body>
 </html>
