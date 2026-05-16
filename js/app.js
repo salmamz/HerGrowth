@@ -58,22 +58,27 @@ function formatDate(d) {
 ============================== */
 function getCoachBg(domaine) {
   const bgs = {
-    'Sport': 'avatar-sport',
-    'Nutrition': 'avatar-nutri',
-    'Coding': 'avatar-code',
-    'Perso': 'avatar-perso',
-    'Metier': 'avatar-code',
-    'Parentalite': 'avatar-sport'
+    'Sport': 'bg-pink',
+    'Nutrition': 'bg-mint',
+    'Coding': 'bg-lavender',
+    'Perso': 'bg-peach',
+    'Metier': 'bg-lavender',
+    'Parentalite': 'bg-pink'
   };
-  return bgs[domaine] || 'avatar-perso';
+  return bgs[domaine] || 'bg-peach';
 }
 
 function getCoachEmoji(name) {
-  // Un petit hack pour avoir des emojis variés
-  const emojis = ["🧘‍♀️", "👩‍💻", "🥗", "🧠", "💪", "🧗‍♀️", "🏃‍♀️", "🎓"];
+  // Icônes SVG élégantes pour un rendu premium
+  const icons = [
+    `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12" cy="10" r="4"/><circle cx="12" cy="12" r="10"/></svg>`,
+    `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>`,
+    `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+    `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/><path d="M12 7v5l3 3"/></svg>`
+  ];
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  return emojis[Math.abs(hash) % emojis.length];
+  return icons[Math.abs(hash) % icons.length];
 }
 
 /* ==============================

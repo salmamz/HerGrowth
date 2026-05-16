@@ -152,7 +152,15 @@ a { text-decoration: none; color: inherit; }
   font-size: 60px; position: relative;
   transition: transform .4s ease;
 }
+.coach-img svg {
+  width: 52px;
+  height: 52px;
+  stroke: var(--text);
+  opacity: 0.8;
+  transition: all .4s ease;
+}
 .coach-profile-card:hover .coach-img { transform: scale(1.08); }
+.coach-profile-card:hover .coach-img svg { transform: scale(1.1); opacity: 1; stroke: var(--rose-deep); }
 
 .bg-pink { background: linear-gradient(135deg, #FCF0F4 0%, #FEE2E2 100%); }
 .bg-lavender { background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%); }
