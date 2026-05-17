@@ -62,8 +62,8 @@ function getCoachBg(domaine) {
     'Nutrition': 'bg-mint',
     'Coding': 'bg-lavender',
     'Perso': 'bg-peach',
-    'Metier': 'bg-lavender',
-    'Parentalite': 'bg-pink'
+    'Métier': 'bg-yellow',
+    'Metier': 'bg-yellow'
   };
   return bgs[domaine] || 'bg-peach';
 }
@@ -135,7 +135,6 @@ function initCoachsPage() {
             <div class="coach-footer">
               <div class="coach-price">${c.prix}DT<span>/séance</span></div>
               <div style="display:flex; gap:8px">
-                <button class="btn btn-ghost btn-sm" onclick="openChat(${c.user_id}, '${c.nom}')" title="Discuter"><span class="icon">💬</span></button>
                 <button class="btn btn-primary btn-sm" onclick="openBooking(${c.id}, '${c.nom}', ${c.prix})">Réserver</button>
               </div>
             </div>
@@ -178,13 +177,20 @@ let selectedDate = null;
 let selectedTime = null;
 let selectedCoach = null;
 
-function openBooking(coachId) {
+function openBooking(coachId, coachName, coachPrice) {
   selectedCoach = COACHES.find(c => c.id === coachId);
+  if (!selectedCoach && coachName) {
+    selectedCoach = { id: coachId, nom: coachName, specialite: '', prix: coachPrice || 50 };
+  }
   if (!selectedCoach) return;
   const modal = document.getElementById("booking-modal");
-  if (!modal) { location.href = "pages/login.php"; return; }
+  if (!modal) { 
+    const isInPages = location.pathname.includes("/pages/");
+    location.href = isInPages ? "login.php" : "pages/login.php"; 
+    return; 
+  }
   document.getElementById("modal-coach-name").textContent = selectedCoach.nom;
-  document.getElementById("modal-coach-role").textContent = selectedCoach.specialite;
+  document.getElementById("modal-coach-role").textContent = selectedCoach.specialite || 'Coach';
   document.getElementById("modal-coach-price").textContent = selectedCoach.prix + "DT/h";
   renderCalendar();
   modal.classList.add("open");
@@ -426,8 +432,8 @@ function showAdminSection(id) {
 
 function initAdminDashboard() {
   const adminApi = "../php/admin_api.php";
-  
-  // Stats
+
+  // Stats + activité récente + répartition domaines
   fetch(adminApi + "?action=stats")
     .then(r => r.json())
     .then(d => {
@@ -435,6 +441,14 @@ function initAdminDashboard() {
       document.getElementById("stat-coachs").textContent = d.coachs;
       document.getElementById("stat-resas").textContent = d.reservations;
       document.getElementById("stat-revenue").textContent = d.revenue + "DT";
+      renderRecentActivity(d.recent_reservations || []);
+      renderDomainBreakdown(d.domains_breakdown || []);
+    })
+    .catch(() => {
+      document.getElementById("stat-users").textContent = "0";
+      document.getElementById("stat-coachs").textContent = "0";
+      document.getElementById("stat-resas").textContent = "0";
+      document.getElementById("stat-revenue").textContent = "0DT";
     });
 
   // Load Coachs
@@ -445,7 +459,7 @@ function initAdminDashboard() {
       if (!tbody) return;
       tbody.innerHTML = data.map(c => `
         <tr>
-          <td><strong>${c.nom}</strong><br><small>${c.specialite}</small></td>
+          <td><strong>${c.nom}</strong><br><small>${c.specialite || '-'}</small></td>
           <td>${c.domaine}</td>
           <td>${c.prix}DT/h</td>
           <td><span class="badge-status status-${c.valide == 1 ? 'confirme' : 'attente'}">${c.valide == 1 ? 'Validé' : 'En attente'}</span></td>
@@ -485,9 +499,88 @@ function initAdminDashboard() {
           <td>${u.email}</td>
           <td>${formatDate(u.created_at)}</td>
           <td>${u.role}</td>
-          <td><button class="btn btn-sm btn-danger">Bloquer</button></td>
+          <td><button class="btn btn-sm btn-danger" onclick="deleteUserAdmin(${u.id})">Bloquer / Supprimer</button></td>
         </tr>`).join("");
     });
+}
+
+function renderRecentActivity(items) {
+  const body = document.getElementById("recent-activity-body");
+  if (!body) return;
+  if (!items.length) {
+    body.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted)">Aucune activité récente pour le moment.</td></tr>`;
+    return;
+  }
+  body.innerHTML = items.map(r => `
+    <tr>
+      <td><strong>${r.prenom} ${r.nom}</strong></td>
+      <td>${r.coach_nom}</td>
+      <td>${r.domaine}</td>
+      <td>${formatDate(r.date)} ${r.heure}</td>
+      <td><span class="badge-status status-${r.statut}">${statusLabel(r.statut)}</span></td>
+    </tr>`).join("");
+}
+
+function renderDomainBreakdown(data) {
+  const container = document.getElementById("domains-breakdown");
+  if (!container) return;
+  if (!data.length) {
+    container.innerHTML = `<div style="padding:24px;color:var(--text-muted)">Aucune répartition disponible.</div>`;
+    return;
+  }
+  const total = data.reduce((sum, item) => sum + Number(item.total), 0) || 1;
+  container.innerHTML = data.map(item => {
+    const pct = Math.round((item.total / total) * 100);
+    return `
+      <div class="progress-line" style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px">
+          <span>${item.domaine}</span><span>${pct}%</span>
+        </div>
+        <div class="progress-bar" style="background:var(--beige);border-radius:999px;height:10px">
+          <div style="width:${pct}%;height:100%;background:var(--rose-deep);border-radius:999px"></div>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+function deleteUserAdmin(id) {
+  if (!confirm("Supprimer définitivement cette utilisatrice ?")) return;
+  const body = new FormData();
+  body.append("id", id);
+  fetch("../php/admin_api.php?action=delete-user", { method: "POST", body })
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { alert("Erreur : " + data.error); return; }
+      showToast("Utilisatrice supprimée.");
+      initAdminDashboard();
+    });
+}
+
+function openAddCoachModal() {
+  const modal = document.getElementById("add-coach-modal");
+  if (modal) modal.style.display = "flex";
+}
+
+function closeAddCoachModal() {
+  const modal = document.getElementById("add-coach-modal");
+  if (modal) modal.style.display = "none";
+}
+
+function submitAddCoach(event) {
+  event.preventDefault();
+  const form = document.getElementById("admin-add-coach-form");
+  if (!form) return;
+  const body = new FormData(form);
+  fetch("../php/admin_api.php?action=add-coach", { method: "POST", body })
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { alert("Erreur : " + data.error); return; }
+      closeAddCoachModal();
+      showToast("Nouvelle coach ajoutée.");
+      initAdminDashboard();
+      form.reset();
+    })
+    .catch(() => alert("Erreur réseau. Réessaie plus tard."));
 }
 
 function toggleCoachValidation(id, val) {
@@ -504,54 +597,6 @@ function deleteCoachAdmin(id) {
   body.append("id", id);
   fetch("../php/admin_api.php?action=delete-coach", { method: "POST", body })
     .then(() => { showToast("Coach supprimé."); initAdminDashboard(); });
-}
-
-/* ==============================
-   Chat & Messaging
-============================== */
-function openChat(contactId, name) {
-  showSection('messages');
-  loadChat(contactId, name);
-}
-
-function loadChat(contactId, name) {
-  const container = document.getElementById('chat-container');
-  if (!container) return;
-  
-  container.innerHTML = `<div class="chat-header"><h4>Discussion avec ${name}</h4></div><div id="chat-messages" class="chat-messages">Chargement...</div>
-    <div class="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Écrivez votre message...">
-      <button class="btn btn-primary btn-sm" onclick="sendMessage(${contactId}, '${name}')">Envoyer</button>
-    </div>`;
-
-  fetch(`../php/messages_api.php?action=get_chat&contact_id=${contactId}`)
-    .then(r => r.json())
-    .then(data => {
-      const msgBox = document.getElementById('chat-messages');
-      msgBox.innerHTML = data.map(m => `
-        <div class="message ${m.expediteur_id == currentUserId ? 'sent' : 'received'}">
-          <div class="msg-content">${m.contenu}</div>
-          <div class="msg-time">${formatDate(m.created_at)}</div>
-        </div>
-      `).join("");
-      msgBox.scrollTop = msgBox.scrollHeight;
-    });
-}
-
-function sendMessage(destId, name) {
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
-  if (!text) return;
-
-  const body = new FormData();
-  body.append('destinataire_id', destId);
-  body.append('contenu', text);
-
-  fetch('../php/messages_api.php?action=send', { method: 'POST', body })
-    .then(() => {
-      input.value = '';
-      loadChat(destId, name);
-    });
 }
 
 /* ==============================

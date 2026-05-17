@@ -51,7 +51,6 @@ $isCoach = ($role === 'coach');
           <a href="javascript:void(0)" onclick="showSection('badges')" id="nav-badges"><span class="icon">🏆</span> Badges</a>
         <a href="javascript:void(0)" onclick="showSection('bootcamps')" id="nav-bootcamps"><span class="icon">🎓</span> Bootcamps</a>
         <a href="javascript:void(0)" onclick="showSection('vip')" id="nav-vip"><span class="icon">👑</span> Programme VIP</a>
-        <a href="javascript:void(0)" onclick="showSection('messages')" id="nav-messages"><span class="icon">💬</span> Messagerie</a>
         <a href="javascript:void(0)" onclick="showSection('settings')" id="nav-settings"><span class="icon">&#9881;&#65039;</span> Param&egrave;tres</a>
         <?php endif; ?>
       </nav>

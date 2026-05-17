@@ -72,10 +72,23 @@ if (empty($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
           </div>
         </div>
 
-        <div class="table-card" style="margin-top:32px">
-          <div class="table-header"><h3>Activit&eacute; r&eacute;cente</h3></div>
-          <div style="padding:24px; text-align:center; color:var(--text-muted)">
-            <p>Les graphiques de progression seront bient&ocirc;t disponibles ici.</p>
+        <div class="dashboard-grid" style="display:grid;grid-template-columns:1.2fr .8fr;gap:24px;margin-top:32px;align-items:start">
+          <div class="table-card">
+            <div class="table-header"><h3>Activité récente</h3></div>
+            <div style="overflow-x:auto">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Cliente</th><th>Coach</th><th>Domaine</th><th>Date</th><th>Statut</th></tr>
+                </thead>
+                <tbody id="recent-activity-body">
+                  <tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted)">Chargement...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-header"><h3>Répartition par domaine</h3></div>
+            <div id="domains-breakdown" style="padding:24px"></div>
           </div>
         </div>
       </div>
@@ -83,8 +96,9 @@ if (empty($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
       <!-- Gestion coachs -->
       <div id="admin-section-coachs" class="dashboard-section" style="display:none">
         <div class="table-card">
-          <div class="table-header">
+          <div class="table-header" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
             <h3>Gestion des coachs</h3>
+            <button class="btn btn-primary btn-sm" onclick="openAddCoachModal()">+ Ajouter une coach</button>
           </div>
           <table class="data-table">
             <thead>
@@ -136,10 +150,40 @@ if (empty($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     </main>
   </div>
 
-  <script src="../js/app.js?v=1.1"></script>
+  <div class="modal-overlay" id="add-coach-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:1000;justify-content:center;align-items:center">
+    <div class="modal" style="background:#fff;border-radius:24px;max-width:640px;width:100%;padding:32px;position:relative;box-shadow:0 24px 64px rgba(0,0,0,.12)">
+      <button class="modal-close" type="button" onclick="closeAddCoachModal()" style="position:absolute;top:18px;right:18px;font-size:20px;border:none;background:none;cursor:pointer">✕</button>
+      <h3>Ajouter une coach</h3>
+      <form id="admin-add-coach-form" onsubmit="submitAddCoach(event)">
+        <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="form-group"><label>Prénom *</label><input name="prenom" type="text" required placeholder="Prénom"></div>
+          <div class="form-group"><label>Nom *</label><input name="nom" type="text" required placeholder="Nom"></div>
+        </div>
+        <div class="form-group"><label>Email *</label><input name="email" type="email" required placeholder="email@example.com"></div>
+        <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="form-group"><label>Mot de passe *</label><input name="password" type="password" required placeholder="Mot de passe"></div>
+          <div class="form-group"><label>Tarif (DT/h) *</label><input name="prix" type="number" min="0" required placeholder="50"></div>
+        </div>
+        <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="form-group"><label>Domaine *</label><input name="domaine" type="text" required placeholder="Sport"></div>
+          <div class="form-group"><label>Spécialité *</label><input name="specialite" type="text" required placeholder="Post-partum, PCOS..."></div>
+        </div>
+        <div class="form-group"><label>Bio</label><textarea name="bio" rows="4" placeholder="Présentation de la coach..."></textarea></div>
+        <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:18px">
+          <button type="button" class="btn btn-outline" onclick="closeAddCoachModal()">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer la coach</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="../js/app.js?v=1.2"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       if (typeof initAdminDashboard === 'function') initAdminDashboard();
+    });
+    document.addEventListener('click', e => {
+      const modal = document.getElementById('add-coach-modal');
+      if (modal && e.target === modal) closeAddCoachModal();
     });
   </script>
 </body>

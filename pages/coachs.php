@@ -59,6 +59,10 @@ $loggedIn = !empty($_SESSION['user_id']);
             <option value="Metier">Coding &amp; Carri&egrave;re</option>
             <option value="Developpement Perso">D&eacute;veloppement perso</option>
             <option value="Parentalite">Parentalit&eacute;</option>
+            <option value="Sante">Sant&eacute; &amp; Bien-&ecirc;tre</option>
+            <option value="Finance">Finance &amp; Budget</option>
+            <option value="Creativite">Cr&eacute;ativit&eacute; &amp; Arts</option>
+            <option value="Relationnel">Relationnel &amp; Couple</option>
           </select>
         </div>
         <div class="filter-group">
